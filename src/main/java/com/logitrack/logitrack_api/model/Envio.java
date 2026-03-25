@@ -15,11 +15,10 @@ public class Envio {
     private Long id;
     private String trackingId;
     private String dni;
-
     private String nombre;
     private String apellido;
     private String direccion;
     private String codigoPostal;
     private Double peso;
-    private String estado;
-}
+    @Enumerated(EnumType.STRING)
+    private EstadoEnvio estado;}
