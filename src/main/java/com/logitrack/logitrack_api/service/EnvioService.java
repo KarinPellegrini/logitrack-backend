@@ -43,13 +43,28 @@ public class EnvioService {
                         HttpStatus.NOT_FOUND,
                         "Envio no encontrado"
                 ));
-
+        EstadoEnvio estadoActual = envio.getEstado();
+        if(!esTransicionValida(estadoActual, nuevoEstado)){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Transicion de estado invalida: " + estadoActual + " -> " + nuevoEstado
+            );
+        }
         envio.setEstado(nuevoEstado);
-
         return repository.save(envio);
     }
 
     public List<Envio> buscarPorNombre(String nombre) {
         return repository.findByNombreContainingIgnoreCase(nombre);
+    }
+
+    private boolean esTransicionValida(EstadoEnvio actual, EstadoEnvio nuevo) {
+
+        return switch (actual) {
+            case REGISTRADO -> nuevo == EstadoEnvio.EN_TRANSITO;
+            case EN_TRANSITO -> nuevo == EstadoEnvio.EN_SUCURSAL;
+            case EN_SUCURSAL -> nuevo == EstadoEnvio.ENTREGADO;
+            case ENTREGADO -> false;
+        };
     }
 }
