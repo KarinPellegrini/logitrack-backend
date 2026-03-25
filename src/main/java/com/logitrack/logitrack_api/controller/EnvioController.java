@@ -1,6 +1,7 @@
 package com.logitrack.logitrack_api.controller;
 
 import com.logitrack.logitrack_api.model.Envio;
+import com.logitrack.logitrack_api.model.EstadoEnvio;
 import com.logitrack.logitrack_api.service.EnvioService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class EnvioController {
     @PostMapping
     public Envio crearEnvio( @Valid @RequestBody Envio envio) {
         return service.crearEnvio(envio);
+
     }
     @GetMapping
     public List<Envio> obtenerTodos() {
@@ -32,7 +34,7 @@ public class EnvioController {
     @PutMapping("/{trackingId}/estado")
     public Envio actualizarEstado(
             @PathVariable String trackingId,
-            @RequestParam String estado
+            @RequestParam EstadoEnvio estado
     ) {
         return service.actualizarEstado(trackingId, estado);
     }

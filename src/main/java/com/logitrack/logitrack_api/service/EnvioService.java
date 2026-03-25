@@ -1,6 +1,7 @@
 package com.logitrack.logitrack_api.service;
 
 import com.logitrack.logitrack_api.model.Envio;
+import com.logitrack.logitrack_api.model.EstadoEnvio;
 import com.logitrack.logitrack_api.repository.EnvioRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,8 @@ public class EnvioService {
 
     public Envio crearEnvio(Envio envio) {
         envio.setTrackingId(UUID.randomUUID().toString());
-        envio.setEstado("Registrado");
-
+        envio.setEstado(EstadoEnvio.REGISTRADO);
+        
         return repository.save(envio);
     }
 
@@ -31,8 +32,7 @@ public class EnvioService {
                 .orElseThrow(() -> new RuntimeException("Envío no encontrado"));
     }
 
-    public Envio actualizarEstado(String trackingId, String nuevoEstado) {
-
+    public Envio actualizarEstado(String trackingId, EstadoEnvio nuevoEstado){
         Envio envio = repository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new RuntimeException("Envio no encontrado"));
 
