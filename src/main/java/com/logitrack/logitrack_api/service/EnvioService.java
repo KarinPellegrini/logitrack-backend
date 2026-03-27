@@ -1,5 +1,7 @@
 package com.logitrack.logitrack_api.service;
 
+import com.logitrack.logitrack_api.dto.EnvioRequestDTO;
+import com.logitrack.logitrack_api.dto.EnvioResponseDTO;
 import com.logitrack.logitrack_api.model.Envio;
 import com.logitrack.logitrack_api.model.EstadoEnvio;
 import com.logitrack.logitrack_api.repository.EnvioRepository;
@@ -19,12 +21,36 @@ public class EnvioService {
         this.repository = repository;
     }
 
-    public Envio crearEnvio(Envio envio) {
+    public EnvioResponseDTO crearEnvio(EnvioRequestDTO dto) {
+
+        Envio envio = new Envio();
+
         envio.setTrackingId(UUID.randomUUID().toString());
         envio.setEstado(EstadoEnvio.REGISTRADO);
-        return repository.save(envio);
-    }
 
+        envio.setDni(dto.getDni());
+        envio.setNombre(dto.getNombre());
+        envio.setApellido(dto.getApellido());
+        envio.setDireccion(dto.getDireccion());
+        envio.setCodigoPostal(dto.getCodigoPostal());
+        envio.setPeso(dto.getPeso());
+
+        repository.save(envio);
+
+        return mapToResponse(envio);
+    }
+    private EnvioResponseDTO mapToResponse(Envio envio){
+
+        EnvioResponseDTO dto = new EnvioResponseDTO();
+
+        dto.setTrackingId(envio.getTrackingId());
+        dto.setNombre(envio.getNombre());
+        dto.setApellido(envio.getApellido());
+        dto.setDireccion(envio.getDireccion());
+        dto.setEstado(envio.getEstado());
+
+        return dto;
+    }
     public List<Envio> obtenerTodos() {
         return repository.findAll();
     }

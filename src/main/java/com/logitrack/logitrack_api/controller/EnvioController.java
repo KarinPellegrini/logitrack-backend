@@ -1,5 +1,7 @@
 package com.logitrack.logitrack_api.controller;
 
+import com.logitrack.logitrack_api.dto.EnvioRequestDTO;
+import com.logitrack.logitrack_api.dto.EnvioResponseDTO;
 import com.logitrack.logitrack_api.model.Envio;
 import com.logitrack.logitrack_api.model.EstadoEnvio;
 import com.logitrack.logitrack_api.service.EnvioService;
@@ -17,10 +19,10 @@ public class EnvioController {
         this.service = service;
     }
     @PostMapping
-    public Envio crearEnvio( @Valid @RequestBody Envio envio) {
-        return service.crearEnvio(envio);
-
+    public EnvioResponseDTO crearEnvio(@Valid @RequestBody EnvioRequestDTO dto) {
+        return service.crearEnvio(dto);
     }
+
     @GetMapping
     public List<Envio> obtenerTodos() {
         return service.obtenerTodos();
