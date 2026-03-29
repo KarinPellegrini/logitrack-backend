@@ -24,8 +24,12 @@ public class Envio {
     @NotBlank
     private String direccion;
     @NotBlank
-    private String codigoPostal;
+    private String codigoPostalDestino;
+    @NotBlank
+    private String codigoPostalOrigen;
     @NotNull
     private Double peso;
+    private String prioridad;
     @Enumerated(EnumType.STRING)
-    private EstadoEnvio estado;}
+    private EstadoEnvio estado;
+}

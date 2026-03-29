@@ -15,6 +15,7 @@ import java.util.List;
 @RequestMapping("/api/envios")
 public class EnvioController {
     private final EnvioService service;
+    // http://localhost:8080/swagger-ui/index.html
 
     public EnvioController(EnvioService service) {
         this.service = service;
@@ -36,17 +37,18 @@ public class EnvioController {
     public Envio getEnvioByTrackingId(@PathVariable String trackingId) {
         return service.getEnvioByTrackingId(trackingId);
     }
+
     @Operation(summary = "Actualizar el estado de un envío")
     @PutMapping("/{trackingId}/estado")
     public Envio actualizarEstado(
             @PathVariable String trackingId,
-            @RequestParam EstadoEnvio estado
-    ) {
+            @RequestParam EstadoEnvio estado) {
         return service.actualizarEstado(trackingId, estado);
     }
+
     @Operation(summary = "Buscar envíos por nombre")
     @GetMapping("/buscar")
-    public List<Envio> buscarPorNombre(@RequestParam String nombre){
+    public List<Envio> buscarPorNombre(@RequestParam String nombre) {
         return service.buscarPorNombre(nombre);
     }
 }

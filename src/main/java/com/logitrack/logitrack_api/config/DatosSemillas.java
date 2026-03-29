@@ -16,7 +16,7 @@ public class DatosSemillas {
     CommandLineRunner initDatabase(EnvioRepository repository) {
         return args -> {
 
-            if(repository.count() == 0){
+            if (repository.count() == 0) {
 
                 Envio e1 = new Envio();
                 e1.setTrackingId(UUID.randomUUID().toString());
@@ -24,7 +24,8 @@ public class DatosSemillas {
                 e1.setNombre("Karin");
                 e1.setApellido("Pellegrini");
                 e1.setDireccion("Av Siempre Viva 742");
-                e1.setCodigoPostal("1665");
+                e1.setCodigoPostalDestino("1665");
+                e1.setCodigoPostalOrigen("1667");
                 e1.setPeso(2.5);
                 e1.setEstado(EstadoEnvio.REGISTRADO);
 
@@ -34,7 +35,8 @@ public class DatosSemillas {
                 e2.setNombre("Ciro");
                 e2.setApellido("Lopez");
                 e2.setDireccion("Calle Falsa 123");
-                e2.setCodigoPostal("1614");
+                e2.setCodigoPostalDestino("1614");
+                e2.setCodigoPostalOrigen("1667");
                 e2.setPeso(1.2);
                 e2.setEstado(EstadoEnvio.EN_TRANSITO);
 
@@ -44,7 +46,8 @@ public class DatosSemillas {
                 e3.setNombre("Melina");
                 e3.setApellido("Scabini");
                 e3.setDireccion("San Martin 550");
-                e3.setCodigoPostal("2000");
+                e3.setCodigoPostalDestino("2000");
+                e3.setCodigoPostalOrigen("1667");
                 e3.setPeso(3.0);
                 e3.setEstado(EstadoEnvio.EN_SUCURSAL);
 

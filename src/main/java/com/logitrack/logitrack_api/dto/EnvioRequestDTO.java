@@ -19,9 +19,14 @@ public class EnvioRequestDTO {
     private String direccion;
 
     @NotBlank
-    private String codigoPostal;
+    private String codigoPostalDestino;
+
+    @NotBlank
+    private String codigoPostalOrigen;
 
     @NotNull
     private Double peso;
+
+    private String prioridad;
 
 }

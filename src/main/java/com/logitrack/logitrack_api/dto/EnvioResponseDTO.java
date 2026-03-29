@@ -16,4 +16,6 @@ public class EnvioResponseDTO {
 
     private EstadoEnvio estado;
 
+    private String prioridad;
+
 }
