@@ -103,6 +103,7 @@ public class EnvioService {
         dto.setApellido(envio.getApellido());
         dto.setDireccion(envio.getDireccion());
         dto.setEstado(envio.getEstado());
+        dto.setPrioridad(envio.getPrioridad());
 
         return dto;
     }

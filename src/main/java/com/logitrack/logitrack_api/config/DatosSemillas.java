@@ -22,6 +22,7 @@ public class DatosSemillas {
                 e1.setTrackingId(UUID.randomUUID().toString());
                 e1.setDni("40123456");
                 e1.setNombre("Karin");
+                e1.setPrioridad("MEDIA");
                 e1.setApellido("Pellegrini");
                 e1.setDireccion("Av Siempre Viva 742");
                 e1.setCodigoPostalDestino("1665");
@@ -33,6 +34,7 @@ public class DatosSemillas {
                 e2.setTrackingId(UUID.randomUUID().toString());
                 e2.setDni("38999888");
                 e2.setNombre("Ciro");
+                e2.setPrioridad("BAJA");
                 e2.setApellido("Lopez");
                 e2.setDireccion("Calle Falsa 123");
                 e2.setCodigoPostalDestino("1614");
@@ -44,6 +46,7 @@ public class DatosSemillas {
                 e3.setTrackingId(UUID.randomUUID().toString());
                 e3.setDni("35555111");
                 e3.setNombre("Melina");
+                e3.setPrioridad("ALTA");
                 e3.setApellido("Scabini");
                 e3.setDireccion("San Martin 550");
                 e3.setCodigoPostalDestino("2000");
