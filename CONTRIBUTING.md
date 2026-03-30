@@ -168,11 +168,9 @@ Buenas prácticas:
 
 # Testing
 
-Cuando sea posible:
-
-* Agregar **tests unitarios**
-* Validar endpoints del CRUD
-* Probar integración con la IA
+* **tests unitarios**
+* Validación de endpoints del CRUD
+* Integración con la IA
 
 ---
 
