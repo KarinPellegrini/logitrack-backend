@@ -1,0 +1,52 @@
+name: LogiTrack Backend & IA CI
+
+# Se ejecuta con cada 'push' a la rama main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # --- ENTORNO JAVA + LINTER JAVA ---
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build Java with Maven
+      run: mvn -B compile --file pom.xml
+
+    # --- ENTORNO PYTHON ---
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install IA dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flask pandas scikit-learn requests numpy
+    
+    # --- LINTER PYTHON ---
+    - name: Python Syntax Check (Linter)
+      run: |
+        # Verificamos que el script no tenga errores de sintaxis
+        python -m py_compile src/main/java/com/logitrack/logitrack_IA/RandomForestIA.py #
+
+    # --- TESTS ---
+    - name: Run Python Syntax Check & Tests
+      run: |
+        python -m py_compile src/main/java/com/logitrack/logitrack_IA/RandomForestIA.py
+        python src/main/java/com/logitrack/logitrack_IA/test_ia.py
+        
+    - name: Run Java Tests
+      run: mvn test
