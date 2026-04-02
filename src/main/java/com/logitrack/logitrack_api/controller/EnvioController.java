@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/envios")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://logitrack-prototype.vercel.app")
 public class EnvioController {
     private final EnvioService service;
     // http://localhost:8080/swagger-ui/index.html
