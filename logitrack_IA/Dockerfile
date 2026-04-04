@@ -4,5 +4,4 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY RandomForestIA.py .
 EXPOSE 5001
-# Usamos gunicorn en vez de flask dev server para producción
-CMD ["gunicorn", "--bind", "0.0.0.0:5001", "--timeout", "120", "RandomForestIA:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5001} --timeout 120 RandomForestIA:app"]
