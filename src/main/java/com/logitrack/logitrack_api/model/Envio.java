@@ -33,6 +33,8 @@ public class Envio {
     private String tipoEnvio;
     private Double distanciaKm;
     private String prioridad;
+    @Column(length = 500)
+    private String motivoPrioridad;
     @Enumerated(EnumType.STRING)
     private EstadoEnvio estado;
     private LocalDateTime fechaCreacion;

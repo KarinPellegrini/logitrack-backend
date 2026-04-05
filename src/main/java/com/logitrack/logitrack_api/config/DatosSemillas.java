@@ -55,6 +55,7 @@ public class DatosSemillas {
                 e1.setPeso(2.5);
                 e1.setTipoEnvio("Estandar");
                 e1.setDistanciaKm(12.4);
+                e1.setMotivoPrioridad("Peso moderado (2.5 kg) a distancia intermedia (12.4 km). Prioridad estándar.");
                 e1.setEstado(EstadoEnvio.REGISTRADO);
                 e1.setFechaCreacion(LocalDateTime.now().minusDays(5));
 
@@ -70,6 +71,7 @@ public class DatosSemillas {
                 e2.setPeso(1.2);
                 e2.setTipoEnvio("Fragil");
                 e2.setDistanciaKm(38.7);
+                e2.setMotivoPrioridad("Envío liviano (1.2 kg) de corta distancia (38.7 km). Sin urgencia especial.");
                 e2.setEstado(EstadoEnvio.EN_TRANSITO);
                 e2.setFechaCreacion(LocalDateTime.now().minusDays(3));
 
@@ -85,6 +87,7 @@ public class DatosSemillas {
                 e3.setPeso(3.0);
                 e3.setTipoEnvio("Medica");
                 e3.setDistanciaKm(285.3);
+                e3.setMotivoPrioridad("Envío de tipo médico/urgente (3.0 kg) con destino lejano (285.3 km). Requiere atención prioritaria.");
                 e3.setEstado(EstadoEnvio.EN_SUCURSAL);
                 e3.setFechaCreacion(LocalDateTime.now().minusDays(1));
 

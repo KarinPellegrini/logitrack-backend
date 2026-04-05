@@ -28,6 +28,8 @@ public class EnvioResponseDTO {
 
     private String prioridad;
 
+    private String motivoPrioridad;
+
     private Double distanciaKm;
 
 }

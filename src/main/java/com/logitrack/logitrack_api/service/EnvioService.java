@@ -48,13 +48,18 @@ public class EnvioService {
         envio.setPeso(dto.getPeso());
 
         Map<String, Object> resultadoIA = consultarIA(dto);
-        envio.setPrioridad((String) resultadoIA.getOrDefault("prioridad", "BAJA"));
+        String prioridad = (String) resultadoIA.getOrDefault("prioridad", "BAJA");
+        envio.setPrioridad(prioridad);
         Object distancia = resultadoIA.get("distanciaKm");
+        Double distanciaKm = null;
         if (distancia != null) {
-            envio.setDistanciaKm(((Number) distancia).doubleValue());
+            distanciaKm = ((Number) distancia).doubleValue();
+            envio.setDistanciaKm(distanciaKm);
         }
-        envio.setTipoEnvio(dto.getTipoEnvio() != null ? dto.getTipoEnvio() : "Estandar");
+        String tipoEnvio = dto.getTipoEnvio() != null ? dto.getTipoEnvio() : "Estandar";
+        envio.setTipoEnvio(tipoEnvio);
         envio.setFechaCreacion(LocalDateTime.now());
+        envio.setMotivoPrioridad(generarMotivoPrioridad(distanciaKm, dto.getPeso(), tipoEnvio, prioridad));
 
         repository.save(envio);
         return mapToResponse(envio);
@@ -107,6 +112,7 @@ public class EnvioService {
         dto.setTipoEnvio(envio.getTipoEnvio());
         dto.setEstado(envio.getEstado());
         dto.setPrioridad(envio.getPrioridad());
+        dto.setMotivoPrioridad(envio.getMotivoPrioridad());
         dto.setDistanciaKm(envio.getDistanciaKm());
         return dto;
     }
@@ -149,6 +155,20 @@ public class EnvioService {
             case EN_TRANSITO -> nuevo == EstadoEnvio.EN_SUCURSAL;
             case EN_SUCURSAL -> nuevo == EstadoEnvio.ENTREGADO;
             case ENTREGADO -> false;
+        };
+    }
+
+    private String generarMotivoPrioridad(Double distanciaKm, Double peso, String tipoEnvio, String prioridad) {
+        String distStr = distanciaKm != null ? String.format("%.1f km", distanciaKm) : "distancia no calculada";
+        String pesoStr = peso != null ? String.format("%.1f kg", peso) : "peso desconocido";
+        boolean esMedico = "Medica".equalsIgnoreCase(tipoEnvio) || "Urgente".equalsIgnoreCase(tipoEnvio);
+
+        return switch (prioridad != null ? prioridad : "BAJA") {
+            case "ALTA" -> esMedico
+                ? String.format("Envío de tipo médico/urgente (%s) con destino lejano (%s). Requiere atención prioritaria.", pesoStr, distStr)
+                : String.format("Envío de gran peso (%s) con destino lejano (%s). Requiere atención prioritaria.", pesoStr, distStr);
+            case "MEDIA" -> String.format("Peso moderado (%s) a distancia intermedia (%s). Prioridad estándar.", pesoStr, distStr);
+            default -> String.format("Envío liviano (%s) de corta distancia (%s). Sin urgencia especial.", pesoStr, distStr);
         };
     }
 }
