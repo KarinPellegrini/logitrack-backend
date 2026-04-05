@@ -93,11 +93,12 @@ public class EnvioService {
             data.put("tipo_envio", tipoEnvio);
 
             String jsonBody = mapper.writeValueAsString(data);
-            System.out.println("[IA] Llamando a: " + iaServiceUrl + "/predict");
+            String urlBase = iaServiceUrl.trim();
+            System.out.println("[IA] Llamando a: " + urlBase + "/predict");
             System.out.println("[IA] Body enviado: " + jsonBody);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(iaServiceUrl + "/predict"))
+                    .uri(URI.create(urlBase + "/predict"))
                     .timeout(Duration.ofSeconds(30))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
