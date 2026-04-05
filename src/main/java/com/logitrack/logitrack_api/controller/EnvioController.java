@@ -6,10 +6,13 @@ import com.logitrack.logitrack_api.model.Envio;
 import com.logitrack.logitrack_api.model.EstadoEnvio;
 import com.logitrack.logitrack_api.service.EnvioService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -59,5 +62,13 @@ public class EnvioController {
     @GetMapping("/buscar")
     public List<Envio> buscarPorNombre(@RequestParam String nombre) {
         return service.buscarPorNombre(nombre);
+    }
+
+    @Operation(summary = "Filtrar envíos por rango de fechas de creación")
+    @GetMapping("/por-fecha")
+    public List<Envio> buscarPorFechas(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta) {
+        return service.buscarPorRangoFechas(desde.atStartOfDay(), hasta.atTime(23, 59, 59));
     }
 }

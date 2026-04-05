@@ -35,6 +35,7 @@ public class Envio {
     private String prioridad;
     @Enumerated(EnumType.STRING)
     private EstadoEnvio estado;
+    private LocalDateTime fechaCreacion;
     private LocalDateTime fechaCambioEstado;
     private String usuarioCambioEstado;
 }

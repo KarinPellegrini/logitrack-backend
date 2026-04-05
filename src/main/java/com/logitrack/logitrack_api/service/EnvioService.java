@@ -54,6 +54,7 @@ public class EnvioService {
             envio.setDistanciaKm(((Number) distancia).doubleValue());
         }
         envio.setTipoEnvio(dto.getTipoEnvio() != null ? dto.getTipoEnvio() : "Estandar");
+        envio.setFechaCreacion(LocalDateTime.now());
 
         repository.save(envio);
         return mapToResponse(envio);
@@ -136,6 +137,10 @@ public class EnvioService {
 
     public List<Envio> buscarPorNombre(String nombre) {
         return repository.findByNombreContainingIgnoreCase(nombre);
+    }
+
+    public List<Envio> buscarPorRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
+        return repository.findByFechaCreacionBetween(desde, hasta);
     }
 
     private boolean esTransicionValida(EstadoEnvio actual, EstadoEnvio nuevo) {
