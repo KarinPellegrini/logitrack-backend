@@ -19,4 +19,6 @@ public interface EnvioRepository extends JpaRepository<Envio, Long> {
     List<Envio> buscarPorTermino(@Param("termino") String termino);
 
     List<Envio> findByFechaCreacionBetween(LocalDateTime desde, LocalDateTime hasta);
+
+    List<Envio> findByAnonimizadoTrue();
 }

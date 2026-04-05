@@ -64,6 +64,18 @@ public class EnvioController {
         return service.buscarPorNombre(nombre);
     }
 
+    @Operation(summary = "Anonimizar datos personales de un envío (borrado lógico)")
+    @PostMapping("/{trackingId}/anonimizar")
+    public ResponseEntity<Map<String, Object>> anonimizarDatos(@PathVariable String trackingId) {
+        return ResponseEntity.ok(service.anonimizarDatos(trackingId));
+    }
+
+    @Operation(summary = "Obtener solicitudes de borrado lógico (supervisor)")
+    @GetMapping("/solicitudes-borrado")
+    public List<Envio> obtenerSolicitudesBorrado() {
+        return service.obtenerSolicitudesBorrado();
+    }
+
     @Operation(summary = "Filtrar envíos por rango de fechas de creación")
     @GetMapping("/por-fecha")
     public List<Envio> buscarPorFechas(

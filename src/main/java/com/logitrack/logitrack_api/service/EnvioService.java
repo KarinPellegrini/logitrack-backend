@@ -116,6 +116,8 @@ public class EnvioService {
         dto.setPrioridad(envio.getPrioridad());
         dto.setMotivoPrioridad(envio.getMotivoPrioridad());
         dto.setDistanciaKm(envio.getDistanciaKm());
+        dto.setAnonimizado(envio.getAnonimizado());
+        dto.setFechaAnonimizacion(envio.getFechaAnonimizacion());
         return dto;
     }
 
@@ -158,6 +160,26 @@ public class EnvioService {
             case EN_SUCURSAL -> nuevo == EstadoEnvio.ENTREGADO;
             case ENTREGADO -> false;
         };
+    }
+
+    public Map<String, Object> anonimizarDatos(String trackingId) {
+        Envio envio = repository.findByTrackingId(trackingId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Envío no encontrado."));
+        if (Boolean.TRUE.equals(envio.getAnonimizado())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Los datos de este envío ya fueron anonimizados.");
+        }
+        envio.setNombre("[DATO ELIMINADO]");
+        envio.setApellido("[DATO ELIMINADO]");
+        envio.setDni("[DATO ELIMINADO]");
+        envio.setDireccion("[DATO ELIMINADO]");
+        envio.setAnonimizado(true);
+        envio.setFechaAnonimizacion(LocalDateTime.now());
+        repository.save(envio);
+        return Map.of("mensaje", "Datos personales anonimizados. El supervisor fue notificado.", "trackingId", trackingId);
+    }
+
+    public List<Envio> obtenerSolicitudesBorrado() {
+        return repository.findByAnonimizadoTrue();
     }
 
     private void validarCodigoPostal(String cp, String campo) {

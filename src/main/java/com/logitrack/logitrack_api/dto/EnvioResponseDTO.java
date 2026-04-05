@@ -32,4 +32,8 @@ public class EnvioResponseDTO {
 
     private Double distanciaKm;
 
+    private Boolean anonimizado;
+
+    private java.time.LocalDateTime fechaAnonimizacion;
+
 }

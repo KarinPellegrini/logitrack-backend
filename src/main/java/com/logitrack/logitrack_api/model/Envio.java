@@ -40,4 +40,6 @@ public class Envio {
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaCambioEstado;
     private String usuarioCambioEstado;
+    private Boolean anonimizado;
+    private LocalDateTime fechaAnonimizacion;
 }
