@@ -3,6 +3,7 @@ package com.logitrack.logitrack_api.repository;
 import com.logitrack.logitrack_api.model.HistorialEstado;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
