@@ -64,6 +64,12 @@ public class EnvioController {
         return service.buscarPorNombre(nombre);
     }
 
+    @Operation(summary = "Obtener historial de cambios de estado de un envío")
+    @GetMapping("/{trackingId}/historial")
+    public ResponseEntity<?> obtenerHistorial(@PathVariable String trackingId) {
+        return ResponseEntity.ok(service.obtenerHistorial(trackingId));
+    }
+
     @Operation(summary = "Anonimizar datos personales de un envío (borrado lógico)")
     @PostMapping("/{trackingId}/anonimizar")
     public ResponseEntity<Map<String, Object>> anonimizarDatos(@PathVariable String trackingId) {

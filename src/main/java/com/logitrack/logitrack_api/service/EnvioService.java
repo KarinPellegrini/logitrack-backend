@@ -4,7 +4,9 @@ import com.logitrack.logitrack_api.dto.EnvioRequestDTO;
 import com.logitrack.logitrack_api.dto.EnvioResponseDTO;
 import com.logitrack.logitrack_api.model.Envio;
 import com.logitrack.logitrack_api.model.EstadoEnvio;
+import com.logitrack.logitrack_api.model.HistorialEstado;
 import com.logitrack.logitrack_api.repository.EnvioRepository;
+import com.logitrack.logitrack_api.repository.HistorialEstadoRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
@@ -25,13 +27,15 @@ import java.util.UUID;
 public class EnvioService {
 
     private final EnvioRepository repository;
+    private final HistorialEstadoRepository historialRepository;
 
     // Lee la URL desde application.properties (que a su vez lee la env var IA_SERVICE_URL)
     @Value("${ia.service.url}")
     private String iaServiceUrl;
 
-    public EnvioService(EnvioRepository repository) {
+    public EnvioService(EnvioRepository repository, HistorialEstadoRepository historialRepository) {
         this.repository = repository;
+        this.historialRepository = historialRepository;
     }
 
     public EnvioResponseDTO crearEnvio(EnvioRequestDTO dto) {
@@ -139,10 +143,25 @@ public class EnvioService {
                     HttpStatus.BAD_REQUEST,
                     "Transicion de estado invalida: " + estadoActual + " -> " + nuevoEstado);
         }
+        LocalDateTime ahora = LocalDateTime.now();
         envio.setEstado(nuevoEstado);
-        envio.setFechaCambioEstado(LocalDateTime.now());
+        envio.setFechaCambioEstado(ahora);
         envio.setUsuarioCambioEstado(usuario);
-        return repository.save(envio);
+        repository.save(envio);
+
+        HistorialEstado registro = new HistorialEstado();
+        registro.setTrackingId(trackingId);
+        registro.setEstadoAnterior(estadoActual.name());
+        registro.setEstadoNuevo(nuevoEstado.name());
+        registro.setUsuario(usuario);
+        registro.setFechaHora(ahora);
+        historialRepository.save(registro);
+
+        return envio;
+    }
+
+    public List<HistorialEstado> obtenerHistorial(String trackingId) {
+        return historialRepository.findByTrackingIdOrderByFechaHoraAsc(trackingId);
     }
 
     public List<Envio> buscarPorNombre(String termino) {
