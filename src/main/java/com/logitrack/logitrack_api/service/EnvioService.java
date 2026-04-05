@@ -136,6 +136,9 @@ public class EnvioService {
         dto.setDistanciaKm(envio.getDistanciaKm());
         dto.setAnonimizado(envio.getAnonimizado());
         dto.setFechaAnonimizacion(envio.getFechaAnonimizacion());
+        dto.setFechaCreacion(envio.getFechaCreacion());
+        dto.setFechaCambioEstado(envio.getFechaCambioEstado());
+        dto.setUsuarioCambioEstado(envio.getUsuarioCambioEstado());
         return dto;
     }
 

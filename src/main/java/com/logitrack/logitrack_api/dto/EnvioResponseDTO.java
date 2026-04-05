@@ -36,4 +36,10 @@ public class EnvioResponseDTO {
 
     private java.time.LocalDateTime fechaAnonimizacion;
 
+    private java.time.LocalDateTime fechaCreacion;
+
+    private java.time.LocalDateTime fechaCambioEstado;
+
+    private String usuarioCambioEstado;
+
 }
