@@ -77,6 +77,8 @@ public class EnvioService {
         fallback.put("prioridad", "BAJA");
         fallback.put("distanciaKm", 300.0);
         try {
+            System.out.println("[IA] iaServiceUrl configurado: " + iaServiceUrl);
+
             HttpClient client = HttpClient.newBuilder()
                     .connectTimeout(Duration.ofSeconds(10))
                     .build();
@@ -91,6 +93,8 @@ public class EnvioService {
             data.put("tipo_envio", tipoEnvio);
 
             String jsonBody = mapper.writeValueAsString(data);
+            System.out.println("[IA] Llamando a: " + iaServiceUrl + "/predict");
+            System.out.println("[IA] Body enviado: " + jsonBody);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(iaServiceUrl + "/predict"))
@@ -101,11 +105,15 @@ public class EnvioService {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            System.out.println("[IA] HTTP status: " + response.statusCode());
+            System.out.println("[IA] Respuesta: " + response.body());
+
             Map<String, Object> resultMap = mapper.readValue(response.body(), Map.class);
             return resultMap;
 
         } catch (Exception e) {
-            System.err.println("Error de conexión con la IA: " + e.getMessage());
+            System.err.println("[IA] ERROR tipo: " + e.getClass().getName());
+            System.err.println("[IA] ERROR mensaje: " + e.getMessage());
             return fallback;
         }
     }
