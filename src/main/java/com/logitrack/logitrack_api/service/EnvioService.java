@@ -139,6 +139,7 @@ public class EnvioService {
         dto.setFechaCreacion(envio.getFechaCreacion());
         dto.setFechaCambioEstado(envio.getFechaCambioEstado());
         dto.setUsuarioCambioEstado(envio.getUsuarioCambioEstado());
+        dto.setProbabilidadRetraso(calcularProbabilidadRetraso(envio));
         return dto;
     }
 
@@ -229,6 +230,44 @@ public class EnvioService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                 "El CP de " + campo + " debe ser numérico.");
         }
+    }
+
+    private int calcularProbabilidadRetraso(Envio envio) {
+        if (envio.getEstado() == EstadoEnvio.ENTREGADO) return 0;
+
+        int prob = 10;
+
+        // Prioridad asignada por IA
+        String prioridad = envio.getPrioridad() != null ? envio.getPrioridad() : "BAJA";
+        prob += switch (prioridad) {
+            case "ALTA"  -> 35;
+            case "MEDIA" -> 20;
+            default      -> 5;
+        };
+
+        // Peso del paquete
+        double peso = envio.getPeso() != null ? envio.getPeso() : 0;
+        if      (peso > 50) prob += 15;
+        else if (peso > 15) prob += 10;
+        else if (peso > 5)  prob += 5;
+
+        // Distancia estimada
+        double dist = envio.getDistanciaKm() != null ? envio.getDistanciaKm() : 300;
+        if      (dist > 500) prob += 15;
+        else if (dist > 200) prob += 10;
+        else if (dist > 50)  prob += 5;
+
+        // Tipo de envío (mayor complejidad operativa)
+        String tipo = envio.getTipoEnvio() != null ? envio.getTipoEnvio() : "";
+        if      ("Peligrosa".equalsIgnoreCase(tipo)) prob += 15;
+        else if ("Medica".equalsIgnoreCase(tipo))    prob += 10;
+        else if ("Fragil".equalsIgnoreCase(tipo))    prob += 5;
+
+        // Estado actual (EN_SUCURSAL implica espera adicional)
+        if      (envio.getEstado() == EstadoEnvio.EN_SUCURSAL) prob += 10;
+        else if (envio.getEstado() == EstadoEnvio.EN_TRANSITO) prob += 5;
+
+        return Math.min(95, Math.max(5, prob));
     }
 
     private String generarMotivoPrioridad(Double distanciaKm, Double peso, String tipoEnvio, String prioridad) {
