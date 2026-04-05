@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -34,4 +35,6 @@ public class Envio {
     private String prioridad;
     @Enumerated(EnumType.STRING)
     private EstadoEnvio estado;
+    private LocalDateTime fechaCambioEstado;
+    private String usuarioCambioEstado;
 }
