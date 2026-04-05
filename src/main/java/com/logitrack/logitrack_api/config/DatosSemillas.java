@@ -55,7 +55,7 @@ public class DatosSemillas {
                 e1.setPeso(2.5);
                 e1.setTipoEnvio("Estandar");
                 e1.setDistanciaKm(12.4);
-                e1.setMotivoPrioridad("Peso moderado (2.5 kg) a distancia intermedia (12.4 km). Prioridad estándar.");
+                e1.setMotivoPrioridad("Envío liviano (2.5 kg) de corta distancia (12.4 km). Prioridad estándar.");
                 e1.setEstado(EstadoEnvio.REGISTRADO);
                 e1.setFechaCreacion(LocalDateTime.now().minusDays(5));
 
