@@ -2,6 +2,7 @@ package com.logitrack.logitrack_api.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,4 +26,7 @@ public class Usuario {
 
     @Column(nullable = false)
     private String rol;
+
+    private String resetToken;
+    private LocalDateTime resetTokenExpiry;
 }
