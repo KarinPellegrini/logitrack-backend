@@ -163,12 +163,15 @@ public class EnvioService {
         String pesoStr = peso != null ? String.format("%.1f kg", peso) : "peso desconocido";
         boolean esMedico = "Medica".equalsIgnoreCase(tipoEnvio) || "Urgente".equalsIgnoreCase(tipoEnvio);
 
+        String descPeso = (peso == null || peso < 5) ? "liviano" : (peso < 15 ? "moderado" : "de gran volumen");
+        String descDist = (distanciaKm == null || distanciaKm < 50) ? "corta distancia" : (distanciaKm < 200 ? "distancia intermedia" : "destino lejano");
+
         return switch (prioridad != null ? prioridad : "BAJA") {
             case "ALTA" -> esMedico
-                ? String.format("Envío de tipo médico/urgente (%s) con destino lejano (%s). Requiere atención prioritaria.", pesoStr, distStr)
-                : String.format("Envío de gran peso (%s) con destino lejano (%s). Requiere atención prioritaria.", pesoStr, distStr);
-            case "MEDIA" -> String.format("Peso moderado (%s) a distancia intermedia (%s). Prioridad estándar.", pesoStr, distStr);
-            default -> String.format("Envío liviano (%s) de corta distancia (%s). Sin urgencia especial.", pesoStr, distStr);
+                ? String.format("Envío de tipo médico/urgente (%s) con %s (%s). Requiere atención prioritaria.", pesoStr, descDist, distStr)
+                : String.format("Envío %s (%s) con %s (%s). Requiere atención prioritaria.", descPeso, pesoStr, descDist, distStr);
+            case "MEDIA" -> String.format("Envío %s (%s) a %s (%s). Prioridad estándar.", descPeso, pesoStr, descDist, distStr);
+            default -> String.format("Envío %s (%s) de %s (%s). Sin urgencia especial.", descPeso, pesoStr, descDist, distStr);
         };
     }
 }
