@@ -52,40 +52,61 @@ def calcular_prioridad(distancia: float, peso: float, tipo: int) -> int:
 
 def generar_dataset(n: int = N, seed: int = SEED) -> pd.DataFrame:
     """
-    Genera n registros sintéticos con distribución balanceada usando
-    tres bloques de reglas para cubrir los tres niveles de prioridad.
+    Genera n registros cubriendo explícitamente todos los cuadrantes de
+    (distancia × peso × tipo) para que el modelo aprenda correctamente
+    los límites de cada clase.
+
+    BAJA  → Estándar/Frágil, peso<5, dist<50
+    MEDIA → Estándar/Frágil, cualquier dist con peso<5 y dist≥50
+              o peso 5-15 con cualquier dist
+              o peso>15 con dist≤200  (clave: NO es ALTA si dist≤200)
+              o dist>200 con peso≤15  (clave: NO es ALTA si peso≤15)
+    ALTA  → Estándar/Frágil: peso>15 AND dist>200
+              Médica: peso>5 OR dist>100
+              Peligrosa: siempre
     """
     rng = np.random.default_rng(seed)
+    cada = n // 10  # bloques de ~120 registros
 
-    # --- Bloque BAJA (~30%): Estándar/Frágil, peso < 5, distancia < 50 ---
-    n_baja = int(n * 0.30)
-    dist_b = rng.uniform(10, 49,  n_baja).round(2)
-    peso_b = rng.uniform(0.1, 4.9, n_baja).round(2)
-    tipo_b = rng.integers(0, 2,   n_baja)          # 0 o 1
+    bloques = []
 
-    # --- Bloque MEDIA (~35%): Estándar/Frágil, rangos medios ---
-    n_media = int(n * 0.35)
-    dist_m = rng.uniform(50, 200,  n_media).round(2)
-    peso_m = rng.uniform(5,  15,   n_media).round(2)
-    tipo_m = rng.integers(0, 2,    n_media)
+    # ── BAJA ──────────────────────────────────────────────────────────────
+    # Estándar/Frágil, dist<50, peso<5
+    bloques.append((rng.uniform(10,  49,  cada*3).round(2),
+                    rng.uniform(0.1, 4.9, cada*3).round(2),
+                    rng.integers(0, 2,    cada*3)))
 
-    # --- Bloque ALTA (~35%): cargas pesadas/largas + Médica/Peligrosa ---
-    n_alta = n - n_baja - n_media
-    # Mitad: Estándar/Frágil con peso>15 y distancia>200
-    n_alt_std = n_alta // 2
-    dist_a1 = rng.uniform(201, 1500, n_alt_std).round(2)
-    peso_a1 = rng.uniform(16,  100,  n_alt_std).round(2)
-    tipo_a1 = rng.integers(0, 2, n_alt_std)
-    # Mitad: Médica (2) y Peligrosa (3)
-    n_alt_esp = n_alta - n_alt_std
-    dist_a2 = rng.uniform(10,  1500, n_alt_esp).round(2)
-    peso_a2 = rng.uniform(0.1, 100,  n_alt_esp).round(2)
-    tipo_a2 = rng.integers(2, 4, n_alt_esp)    # 2 o 3
+    # ── MEDIA ─────────────────────────────────────────────────────────────
+    # Caso 1: dist 50-200, peso 5-15 (caso central)
+    bloques.append((rng.uniform(50,  200, cada*2).round(2),
+                    rng.uniform(5,   15,  cada*2).round(2),
+                    rng.integers(0, 2,    cada*2)))
 
-    # Combinar todos los bloques
-    distancias = np.concatenate([dist_b, dist_m, dist_a1, dist_a2])
-    pesos      = np.concatenate([peso_b, peso_m, peso_a1, peso_a2])
-    tipos      = np.concatenate([tipo_b, tipo_m, tipo_a1, tipo_a2])
+    # Caso 2: dist>200 con peso≤15  ← cuadrante crítico que faltaba
+    bloques.append((rng.uniform(201, 1500, cada*2).round(2),
+                    rng.uniform(0.1, 15,   cada*2).round(2),
+                    rng.integers(0, 2,     cada*2)))
+
+    # Caso 3: dist<50 con peso 5-15
+    bloques.append((rng.uniform(10,  49, cada).round(2),
+                    rng.uniform(5,   15, cada).round(2),
+                    rng.integers(0, 2,   cada)))
+
+    # ── ALTA ──────────────────────────────────────────────────────────────
+    # Estándar/Frágil: peso>15 AND dist>200
+    bloques.append((rng.uniform(201, 1500, cada).round(2),
+                    rng.uniform(16,  100,  cada).round(2),
+                    rng.integers(0, 2,     cada)))
+
+    # Médica y Peligrosa (dist y peso variados)
+    bloques.append((rng.uniform(10,  1500, cada).round(2),
+                    rng.uniform(0.1, 100,  cada).round(2),
+                    rng.integers(2, 4,     cada)))   # tipo 2 o 3
+
+    # Combinar
+    distancias = np.concatenate([b[0] for b in bloques])
+    pesos      = np.concatenate([b[1] for b in bloques])
+    tipos      = np.concatenate([b[2] for b in bloques])
 
     prioridades = np.array([
         calcular_prioridad(d, p, t)
@@ -99,7 +120,6 @@ def generar_dataset(n: int = N, seed: int = SEED) -> pd.DataFrame:
         'prioridad':  prioridades,
     })
 
-    # Mezclar filas para que el modelo no aprenda el orden de los bloques
     df = df.sample(frac=1, random_state=seed).reset_index(drop=True)
     return df
 
