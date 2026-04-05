@@ -42,4 +42,6 @@ public class EnvioResponseDTO {
 
     private String usuarioCambioEstado;
 
+    private Integer probabilidadRetraso;
+
 }
