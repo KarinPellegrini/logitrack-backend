@@ -80,8 +80,8 @@ def predict():
 
     categorias = {0: "BAJA", 1: "MEDIA", 2: "ALTA"}
     return jsonify({
-        'prioridad': categorias[pred[0]],
-        'distanciaKm': round(dist, 2)
+        'prioridad': categorias[int(pred[0])],
+        'distanciaKm': round(float(dist), 2)
     })
 
 if __name__ == '__main__':
