@@ -27,6 +27,8 @@ public class EnvioRequestDTO {
     @NotNull
     private Double peso;
 
+    private String tipoEnvio;
+
     private String prioridad;
 
 }

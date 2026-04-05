@@ -29,6 +29,8 @@ public class Envio {
     private String codigoPostalOrigen;
     @NotNull
     private Double peso;
+    private String tipoEnvio;
+    private Double distanciaKm;
     private String prioridad;
     @Enumerated(EnumType.STRING)
     private EstadoEnvio estado;
