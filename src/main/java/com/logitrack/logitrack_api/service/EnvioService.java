@@ -182,6 +182,22 @@ public class EnvioService {
         return mapToResponse(actualizarEstado(trackingId, nuevoEstado, usuario));
     }
 
+    public List<EnvioResponseDTO> obtenerTodosDTO() {
+        return repository.findAll().stream().map(this::mapToResponse).toList();
+    }
+
+    public EnvioResponseDTO getEnvioByTrackingIdDTO(String trackingId) {
+        return mapToResponse(getEnvioByTrackingId(trackingId));
+    }
+
+    public List<EnvioResponseDTO> buscarPorNombreDTO(String termino) {
+        return repository.buscarPorTermino(termino).stream().map(this::mapToResponse).toList();
+    }
+
+    public List<EnvioResponseDTO> buscarPorFechasDTO(LocalDateTime desde, LocalDateTime hasta) {
+        return repository.findByFechaCreacionBetween(desde, hasta).stream().map(this::mapToResponse).toList();
+    }
+
     public List<HistorialEstado> obtenerHistorial(String trackingId) {
         return historialRepository.findByTrackingIdOrderByFechaHoraAsc(trackingId);
     }

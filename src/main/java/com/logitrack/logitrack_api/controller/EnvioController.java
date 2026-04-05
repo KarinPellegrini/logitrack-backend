@@ -39,14 +39,14 @@ public class EnvioController {
     }
 
     @GetMapping
-    public List<Envio> obtenerTodos() {
-        return service.obtenerTodos();
+    public List<EnvioResponseDTO> obtenerTodos() {
+        return service.obtenerTodosDTO();
     }
 
     @Operation(summary = "Obtener envío por trackingId")
     @GetMapping("/{trackingId}")
-    public Envio getEnvioByTrackingId(@PathVariable String trackingId) {
-        return service.getEnvioByTrackingId(trackingId);
+    public EnvioResponseDTO getEnvioByTrackingId(@PathVariable String trackingId) {
+        return service.getEnvioByTrackingIdDTO(trackingId);
     }
 
     @Operation(summary = "Actualizar el estado de un envío")
@@ -60,8 +60,8 @@ public class EnvioController {
 
     @Operation(summary = "Buscar envíos por nombre")
     @GetMapping("/buscar")
-    public List<Envio> buscarPorNombre(@RequestParam String nombre) {
-        return service.buscarPorNombre(nombre);
+    public List<EnvioResponseDTO> buscarPorNombre(@RequestParam String nombre) {
+        return service.buscarPorNombreDTO(nombre);
     }
 
     @Operation(summary = "Obtener historial de cambios de estado de un envío")
@@ -84,9 +84,9 @@ public class EnvioController {
 
     @Operation(summary = "Filtrar envíos por rango de fechas de creación")
     @GetMapping("/por-fecha")
-    public List<Envio> buscarPorFechas(
+    public List<EnvioResponseDTO> buscarPorFechas(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta) {
-        return service.buscarPorRangoFechas(desde.atStartOfDay(), hasta.atTime(23, 59, 59));
+        return service.buscarPorFechasDTO(desde.atStartOfDay(), hasta.atTime(23, 59, 59));
     }
 }
