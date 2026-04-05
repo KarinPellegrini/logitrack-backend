@@ -136,7 +136,7 @@ public class EnvioService {
     }
 
     public List<Envio> buscarPorNombre(String termino) {
-        return repository.findByNombreContainingIgnoreCaseOrApellidoContainingIgnoreCase(termino, termino);
+        return repository.buscarPorTermino(termino);
     }
 
     public List<Envio> buscarPorRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
