@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Configuration
@@ -31,6 +32,7 @@ public class DatosSemillas {
                 e1.setTipoEnvio("Estandar");
                 e1.setDistanciaKm(12.4);
                 e1.setEstado(EstadoEnvio.REGISTRADO);
+                e1.setFechaCreacion(LocalDateTime.now().minusDays(5));
 
                 Envio e2 = new Envio();
                 e2.setTrackingId(UUID.randomUUID().toString());
@@ -45,6 +47,7 @@ public class DatosSemillas {
                 e2.setTipoEnvio("Fragil");
                 e2.setDistanciaKm(38.7);
                 e2.setEstado(EstadoEnvio.EN_TRANSITO);
+                e2.setFechaCreacion(LocalDateTime.now().minusDays(3));
 
                 Envio e3 = new Envio();
                 e3.setTrackingId(UUID.randomUUID().toString());
@@ -59,6 +62,7 @@ public class DatosSemillas {
                 e3.setTipoEnvio("Medica");
                 e3.setDistanciaKm(285.3);
                 e3.setEstado(EstadoEnvio.EN_SUCURSAL);
+                e3.setFechaCreacion(LocalDateTime.now().minusDays(1));
 
                 repository.save(e1);
                 repository.save(e2);
