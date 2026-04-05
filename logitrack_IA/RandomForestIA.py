@@ -79,7 +79,10 @@ def predict():
     pred = clf.predict([[dist, peso, tipo_num]])
 
     categorias = {0: "BAJA", 1: "MEDIA", 2: "ALTA"}
-    return jsonify({'prioridad': categorias[pred[0]]})
+    return jsonify({
+        'prioridad': categorias[pred[0]],
+        'distanciaKm': round(dist, 2)
+    })
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)

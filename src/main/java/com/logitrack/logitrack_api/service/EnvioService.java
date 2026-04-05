@@ -46,27 +46,35 @@ public class EnvioService {
         envio.setCodigoPostalOrigen(dto.getCodigoPostalOrigen());
         envio.setPeso(dto.getPeso());
 
-        String prioridadResult = consultarPrioridadIA(dto);
-        envio.setPrioridad(prioridadResult);
+        Map<String, Object> resultadoIA = consultarIA(dto);
+        envio.setPrioridad((String) resultadoIA.getOrDefault("prioridad", "BAJA"));
+        Object distancia = resultadoIA.get("distanciaKm");
+        if (distancia != null) {
+            envio.setDistanciaKm(((Number) distancia).doubleValue());
+        }
+        envio.setTipoEnvio(dto.getTipoEnvio() != null ? dto.getTipoEnvio() : "Estandar");
 
         repository.save(envio);
         return mapToResponse(envio);
     }
 
-    private String consultarPrioridadIA(EnvioRequestDTO dto) {
+    private Map<String, Object> consultarIA(EnvioRequestDTO dto) {
+        Map<String, Object> fallback = new HashMap<>();
+        fallback.put("prioridad", "BAJA");
         try {
             HttpClient client = HttpClient.newHttpClient();
             ObjectMapper mapper = new ObjectMapper();
+
+            String tipoEnvio = dto.getTipoEnvio() != null ? dto.getTipoEnvio() : "Estandar";
 
             Map<String, Object> data = new HashMap<>();
             data.put("cp_origen", dto.getCodigoPostalOrigen());
             data.put("cp_destino", dto.getCodigoPostalDestino());
             data.put("peso", dto.getPeso());
-            data.put("tipo_envio", "Estándar");
+            data.put("tipo_envio", tipoEnvio);
 
             String jsonBody = mapper.writeValueAsString(data);
 
-            // ✅ Ahora usa la variable de entorno en vez de localhost hardcodeado
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(iaServiceUrl + "/predict"))
                     .header("Content-Type", "application/json")
@@ -75,23 +83,29 @@ public class EnvioService {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            Map<String, String> resultMap = mapper.readValue(response.body(), Map.class);
-            return resultMap.getOrDefault("prioridad", "BAJA");
+            Map<String, Object> resultMap = mapper.readValue(response.body(), Map.class);
+            return resultMap;
 
         } catch (Exception e) {
             System.err.println("Error de conexión con la IA: " + e.getMessage());
-            return "BAJA";
+            return fallback;
         }
     }
 
     private EnvioResponseDTO mapToResponse(Envio envio) {
         EnvioResponseDTO dto = new EnvioResponseDTO();
         dto.setTrackingId(envio.getTrackingId());
+        dto.setDni(envio.getDni());
         dto.setNombre(envio.getNombre());
         dto.setApellido(envio.getApellido());
         dto.setDireccion(envio.getDireccion());
+        dto.setCodigoPostalOrigen(envio.getCodigoPostalOrigen());
+        dto.setCodigoPostalDestino(envio.getCodigoPostalDestino());
+        dto.setPeso(envio.getPeso());
+        dto.setTipoEnvio(envio.getTipoEnvio());
         dto.setEstado(envio.getEstado());
         dto.setPrioridad(envio.getPrioridad());
+        dto.setDistanciaKm(envio.getDistanciaKm());
         return dto;
     }
 
