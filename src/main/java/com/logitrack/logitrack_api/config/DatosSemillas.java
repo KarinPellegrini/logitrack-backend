@@ -28,6 +28,8 @@ public class DatosSemillas {
                 e1.setCodigoPostalDestino("1665");
                 e1.setCodigoPostalOrigen("1667");
                 e1.setPeso(2.5);
+                e1.setTipoEnvio("Estandar");
+                e1.setDistanciaKm(12.4);
                 e1.setEstado(EstadoEnvio.REGISTRADO);
 
                 Envio e2 = new Envio();
@@ -40,6 +42,8 @@ public class DatosSemillas {
                 e2.setCodigoPostalDestino("1614");
                 e2.setCodigoPostalOrigen("1667");
                 e2.setPeso(1.2);
+                e2.setTipoEnvio("Fragil");
+                e2.setDistanciaKm(38.7);
                 e2.setEstado(EstadoEnvio.EN_TRANSITO);
 
                 Envio e3 = new Envio();
@@ -52,6 +56,8 @@ public class DatosSemillas {
                 e3.setCodigoPostalDestino("2000");
                 e3.setCodigoPostalOrigen("1667");
                 e3.setPeso(3.0);
+                e3.setTipoEnvio("Medica");
+                e3.setDistanciaKm(285.3);
                 e3.setEstado(EstadoEnvio.EN_SUCURSAL);
 
                 repository.save(e1);
