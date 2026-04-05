@@ -39,14 +39,13 @@ jobs:
     # --- LINTER PYTHON ---
     - name: Python Syntax Check (Linter)
       run: |
-        # Verificamos que el script no tenga errores de sintaxis
-        python -m py_compile src/main/java/com/logitrack/logitrack_IA/RandomForestIA.py #
+        python -m py_compile logitrack_IA/RandomForestIA.py
+        python -m py_compile logitrack_IA/generar_dataset.py
 
     # --- TESTS ---
     - name: Run Python Syntax Check & Tests
       run: |
-        python -m py_compile src/main/java/com/logitrack/logitrack_IA/RandomForestIA.py
-        python src/main/java/com/logitrack/logitrack_IA/test_ia.py
+        python logitrack_IA/test_ia.py
         
     - name: Run Java Tests
       run: mvn test
