@@ -51,11 +51,11 @@ public class EnvioController {
 
     @Operation(summary = "Actualizar el estado de un envío")
     @PutMapping("/{trackingId}/estado")
-    public Envio actualizarEstado(
+    public EnvioResponseDTO actualizarEstado(
             @PathVariable String trackingId,
             @RequestParam EstadoEnvio estado,
             @RequestParam(required = false, defaultValue = "sistema") String usuario) {
-        return service.actualizarEstado(trackingId, estado, usuario);
+        return service.actualizarEstadoDTO(trackingId, estado, usuario);
     }
 
     @Operation(summary = "Buscar envíos por nombre")

@@ -178,6 +178,10 @@ public class EnvioService {
         return envio;
     }
 
+    public EnvioResponseDTO actualizarEstadoDTO(String trackingId, EstadoEnvio nuevoEstado, String usuario) {
+        return mapToResponse(actualizarEstado(trackingId, nuevoEstado, usuario));
+    }
+
     public List<HistorialEstado> obtenerHistorial(String trackingId) {
         return historialRepository.findByTrackingIdOrderByFechaHoraAsc(trackingId);
     }
