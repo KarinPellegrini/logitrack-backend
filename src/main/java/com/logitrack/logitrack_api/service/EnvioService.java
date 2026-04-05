@@ -15,6 +15,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -118,7 +119,7 @@ public class EnvioService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Envio no encontrado"));
     }
 
-    public Envio actualizarEstado(String trackingId, EstadoEnvio nuevoEstado) {
+    public Envio actualizarEstado(String trackingId, EstadoEnvio nuevoEstado, String usuario) {
         Envio envio = repository.findByTrackingId(trackingId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Envio no encontrado"));
         EstadoEnvio estadoActual = envio.getEstado();
@@ -128,6 +129,8 @@ public class EnvioService {
                     "Transicion de estado invalida: " + estadoActual + " -> " + nuevoEstado);
         }
         envio.setEstado(nuevoEstado);
+        envio.setFechaCambioEstado(LocalDateTime.now());
+        envio.setUsuarioCambioEstado(usuario);
         return repository.save(envio);
     }
 

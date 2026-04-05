@@ -50,8 +50,9 @@ public class EnvioController {
     @PutMapping("/{trackingId}/estado")
     public Envio actualizarEstado(
             @PathVariable String trackingId,
-            @RequestParam EstadoEnvio estado) {
-        return service.actualizarEstado(trackingId, estado);
+            @RequestParam EstadoEnvio estado,
+            @RequestParam(required = false, defaultValue = "sistema") String usuario) {
+        return service.actualizarEstado(trackingId, estado, usuario);
     }
 
     @Operation(summary = "Buscar envíos por nombre")
